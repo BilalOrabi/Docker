@@ -1,0 +1,11 @@
+# Secrets and credentials (NEVER commit)
+secrets/
+.env
+
+# Docker volumes and data (local only)
+/home/*/data/
+data/
+
+.DS_Store
+
+.dockerignore

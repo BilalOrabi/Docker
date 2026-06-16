@@ -4,6 +4,14 @@ set -e
 
 echo "Starting MariaDB initialization..."
 
+# Read passwords from Docker secrets
+if [ ! -f "/run/secrets/db_root_password" ] || [ ! -f "/run/secrets/db_password" ]; then
+    echo "Error: Secret files not found at /run/secrets/"
+    exit 1
+fi
+
+ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
+DB_PASSWORD=$(cat /run/secrets/db_password)
 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo "Initializing data directory..."
@@ -25,16 +33,16 @@ echo "MariaDB is ready!"
 
 echo "Running setup SQL..."
 mysql --socket=/run/mysqld/mysqld.sock -u root << EOF
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASSWORD}';
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
-CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
 
 echo "Shutting down temporary MariaDB..."
-mysqladmin --socket=/run/mysqld/mysqld.sock -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
+mysqladmin --socket=/run/mysqld/mysqld.sock -u root -p"${ROOT_PASSWORD}" shutdown
 
 
 wait "$pid" || true
