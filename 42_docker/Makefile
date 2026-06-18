@@ -18,7 +18,6 @@ up:
 down:
 	docker compose -f $(COMPOSE_FILE) down
 
-# New target to bring down containers AND remove their volumes
 down-v:
 	docker compose -f $(COMPOSE_FILE) down -v
 
@@ -28,8 +27,7 @@ ps:
 logs:
 	docker compose -f $(COMPOSE_FILE) logs -f
 
-clean:
-	docker compose -f $(COMPOSE_FILE) down
+clean: down-v
 	docker system prune -af
 
 fclean: clean
@@ -38,4 +36,14 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all build up down down-v ps logs clean fclean re
+status:
+	@echo "=============== CONTAINERS ==============="
+	@docker ps -a
+	@echo "================ IMAGES =================="
+	@docker images
+	@echo "================ VOLUMES ================="
+	@docker volume ls
+	@echo "================ NETWORKS ================"
+	@docker network ls
+
+.PHONY: all build up down down-v ps logs clean fclean re status
