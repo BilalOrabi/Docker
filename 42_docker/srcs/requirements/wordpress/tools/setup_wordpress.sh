@@ -71,14 +71,14 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
         --url="${DOMAIN_NAME}" \
         --title="${WORDPRESS_TITLE}" \
         --admin_user="${WORDPRESS_ADMIN_USER}" \
-        --admin_password="${WORDPRESS_ADMIN_PASSWORD}" \
+        --admin_password="${WP_ADMIN_PASSWORD}" \
         --admin_email="${WORDPRESS_ADMIN_EMAIL}" \
         --path="$WP_PATH"
 
     wp user create --allow-root \
         "${WORDPRESS_USER}" \
         "${WORDPRESS_USER_EMAIL}" \
-        --user_pass="${WORDPRESS_USER_PASSWORD}" \
+        --user_pass="${WP_USER_PASSWORD}" \
         --role=author \
         --path="$WP_PATH"
 
