@@ -57,9 +57,12 @@ else
     echo "Database directory already exists. Skipping first-time setup."
 fi
 
+
 echo "Starting MariaDB in the foreground..."
 # Remove old socket file if it exists
 rm -f /var/run/mysqld/mysqld.sock
+rm -f /var/run/mysqld/mysqld.pid
+
 
 # Verify data directory exists
 if [ ! -d "/var/lib/mysql/mysql" ]; then
