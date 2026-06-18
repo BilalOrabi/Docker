@@ -1,0 +1,7 @@
+curl -v http://borabi.42.fr
+
+curl -v --tlsv1.1 --tls-max 1.1 https://borabi.42.fr
+
+docker inspect -f '{{.State.Pid}}' nginx
+
+sudo kill -9 4812
